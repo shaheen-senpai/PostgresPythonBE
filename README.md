@@ -56,7 +56,7 @@ app/
 
 4. Start PostgreSQL using Docker:
    ```
-   docker-compose up -d
+   docker compose up -d
    ```
 
 5. Set up environment variables:

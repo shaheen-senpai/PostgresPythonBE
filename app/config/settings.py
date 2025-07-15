@@ -5,7 +5,8 @@ import os
 from functools import lru_cache
 from typing import List, Optional
 
-from pydantic import BaseSettings, PostgresDsn, validator
+from pydantic_settings import BaseSettings
+from pydantic import field_validator, PostgresDsn
 
 
 class Settings(BaseSettings):
@@ -38,18 +39,20 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
     LOG_FORMAT: str = "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
     
-    @validator("DATABASE_URI", pre=True)
-    def assemble_db_connection(cls, v: Optional[str], values: dict) -> str:
+    @field_validator("DATABASE_URI", mode="before")
+    def assemble_db_connection(cls, v: Optional[str], info) -> str:
         """Construct database URI from components."""
         if isinstance(v, str):
             return v
+            
+        values = info.data
         return PostgresDsn.build(
             scheme="postgresql",
-            user=values.get("POSTGRES_USER"),
+            username=values.get("POSTGRES_USER"),
             password=values.get("POSTGRES_PASSWORD"),
             host=values.get("POSTGRES_HOST"),
-            port=values.get("POSTGRES_PORT"),
-            path=f"/{values.get('POSTGRES_DB') or ''}",
+            port=int(values.get("POSTGRES_PORT")),
+            path=f"{values.get('POSTGRES_DB') or ''}",
         )
     
     class Config:
