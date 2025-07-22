@@ -9,7 +9,10 @@ from sqlalchemy import engine_from_config, pool
 
 from app.config.settings import get_settings
 from app.models.base import BaseModel
-from app.models.user import User  # Import all models here
+from app.models.user import User
+from app.models.vibe_log import VibeLog
+from app.models.vibe_report import VibeReport
+from app.models.burnout_score import BurnoutScore
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
