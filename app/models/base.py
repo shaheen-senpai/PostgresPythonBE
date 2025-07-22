@@ -4,7 +4,7 @@ Base model with common fields and methods for all models.
 from datetime import datetime
 from typing import Any, Dict, Optional
 
-from sqlalchemy import Column, DateTime, Integer
+from sqlalchemy import Column, DateTime, Integer, Index
 from sqlalchemy.ext.declarative import declared_attr
 
 from app.config.database import Base
@@ -23,8 +23,9 @@ class BaseModel(Base):
     
     # Common columns for all models
     id = Column(Integer, primary_key=True, index=True)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    deleted_at = Column(DateTime, nullable=True)
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert model instance to dictionary."""
