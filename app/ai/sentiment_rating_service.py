@@ -70,7 +70,7 @@ Based on this information, generate a comprehensive sentiment rating out of 100 
     async def generate_sentiment_rating(
         self, 
         input_data: SentimentRatingInput,
-        model: str = "gemini-1.5-pro",
+        model: str = "gemini-2.5-flash",
         temperature: float = 0.3
     ) -> SentimentRatingAIResponse:
         """
@@ -119,7 +119,7 @@ Based on this information, generate a comprehensive sentiment rating out of 100 
     async def analyze_sentiment_batch(
         self,
         input_data_list: list[SentimentRatingInput],
-        model: str = "gemini-1.5-pro",
+        model: str = "gemini-2.0-flash",
         temperature: float = 0.3
     ) -> list[SentimentRatingAIResponse]:
         """
@@ -174,7 +174,7 @@ def get_sentiment_rating_service() -> SentimentRatingService:
 # Convenience function for quick sentiment rating
 async def generate_sentiment_rating(
     input_data: SentimentRatingInput,
-    model: str = "gemini-1.5-pro",
+    model: str = "gemini-2.0-flash",
     temperature: float = 0.3
 ) -> SentimentRatingAIResponse:
     """
