@@ -18,8 +18,10 @@ class User(BaseModel):
     is_active = Column(Boolean, default=True, nullable=False)
     is_superuser = Column(Boolean, default=False, nullable=False)
     
-    # Relationships can be added here, for example:
-    # posts = relationship("Post", back_populates="author")
+    # Relationships with new tables
+    vibe_logs = relationship("VibeLog", back_populates="user")
+    vibe_reports = relationship("VibeReport", foreign_keys="VibeReport.user_id", back_populates="user")
+    burnout_scores = relationship("BurnoutScore", back_populates="user")
     
     # Table arguments for indexes
     __table_args__ = (
