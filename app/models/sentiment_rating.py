@@ -5,25 +5,7 @@ from sqlalchemy import Column, String, Integer, Float, ForeignKey, Index, Enum
 from sqlalchemy.orm import relationship
 
 from app.models.base import BaseModel
-import enum
-
-
-class MoodEnum(str, enum.Enum):
-    """Enum for mood values."""
-    SAD = "sad"
-    ANGRY = "angry"
-    HAPPY = "happy"
-    GOOD = "good"
-    EXCITED = "excited"
-
-
-class ComplexityEnum(str, enum.Enum):
-    """Enum for complexity values."""
-    EASY = "easy"
-    MEDIUM = "medium"
-    HARD = "hard"
-    VERY_HARD = "very_hard"
-
+from app.models.vibe_log import ComplexityEnum, MoodEnum
 
 class SentimentRating(BaseModel):
     """Sentiment Rating model for storing user mood analysis results."""
