@@ -3,7 +3,7 @@ Vibe logs API endpoints with role-based access control.
 """
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Query, BackgroundTasks
 from sqlalchemy.orm import Session
 
 from app.config.database import get_db
@@ -29,8 +29,8 @@ def get_my_vibe_logs(
     """
     Get current user's vibe logs.
     
-    Employee access: ✅ Own data only
-    Admin access: ✅ Own data only (when using this endpoint)
+    Employee access: Own data only
+    Admin access: Own data only (when using this endpoint)
     """
     return vibe_log_controller.get_by_user_id(
         db=db, 
@@ -51,8 +51,8 @@ def get_user_vibe_logs(
     """
     Get vibe logs for a specific user.
     
-    Employee access: ✅ Own data only (user_id must match current user)
-    Admin access: ✅ Any user's data
+    Employee access: Own data only (user_id must match current user)
+    Admin access: Any user's data
     """
     return vibe_log_controller.get_by_user_id(
         db=db, 
@@ -72,8 +72,8 @@ def get_all_vibe_logs(
     """
     Get all vibe logs from all users.
     
-    Employee access: ❌ Forbidden
-    Admin access: ✅ All users' data
+    Employee access: Forbidden
+    Admin access: All users' data
     """
     return vibe_log_controller.get_all_logs(
         db=db, 
@@ -85,38 +85,65 @@ def get_all_vibe_logs(
 @router.post("/", response_model=VibeLog)
 def create_vibe_log(
     vibe_log_in: VibeLogCreateEmployee,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):
     """
-    Create a new vibe log for current user.
+    Create a new vibe log for current user with AI sentiment analysis.
     
-    Employee access: ✅ Create own vibe logs
-    Admin access: ✅ Create vibe logs for themselves
+    Employee access: Create own vibe logs
+    Admin access: Create vibe logs for themselves
+    
+    Note: AI sentiment analysis runs in background - sentiment_rating will be updated asynchronously
     """
-    return vibe_log_controller.create_for_user(
+    return vibe_log_controller.create_for_user_with_ai_sentiment(
         db=db,
         obj_in=vibe_log_in,
-        user_id=current_user.id
+        user_id=current_user.id,
+        background_tasks=background_tasks
     )
 
 
 @router.post("/admin", response_model=VibeLog)
 def create_vibe_log_admin(
     vibe_log_in: VibeLogCreate,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_superuser),
 ):
     """
-    Create a new vibe log for any user (admin only).
+    Create a new vibe log for any user (admin only) with AI sentiment analysis.
     
-    Employee access: ❌ Forbidden
-    Admin access: ✅ Create vibe logs for any user
+    Employee access: Forbidden
+    Admin access: Create vibe logs for any user
+    
+    Note: AI sentiment analysis runs in background - sentiment_rating will be updated asynchronously
+    """
+    return vibe_log_controller.create_for_user_with_ai_sentiment(
+        db=db,
+        obj_in=vibe_log_in,
+        user_id=vibe_log_in.user_id,
+        background_tasks=background_tasks
+    )
+
+
+@router.post("/no-sentiment", response_model=VibeLog)
+def create_vibe_log_no_sentiment(
+    vibe_log_in: VibeLogCreateEmployee,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
+    """
+    Create a new vibe log without AI sentiment analysis (fallback endpoint).
+    
+    Employee access: Create own vibe logs
+    Admin access: Create vibe logs for themselves
     """
     return vibe_log_controller.create_for_user(
         db=db,
         obj_in=vibe_log_in,
-        user_id=vibe_log_in.user_id
+        user_id=current_user.id
     )
 
 
@@ -129,8 +156,8 @@ def get_vibe_log(
     """
     Get a specific vibe log by ID.
     
-    Employee access: ✅ Own vibe logs only
-    Admin access: ✅ Any vibe log
+    Employee access: Own vibe logs only
+    Admin access: Any vibe log
     """
     vibe_log = vibe_log_controller.get(db=db, id=vibe_log_id)
     if not vibe_log:
@@ -159,8 +186,8 @@ def update_vibe_log(
     """
     Update a vibe log.
     
-    Employee access: ✅ Own vibe logs only
-    Admin access: ✅ Any vibe log
+    Employee access: Own vibe logs only
+    Admin access: Any vibe log
     """
     vibe_log = vibe_log_controller.get(db=db, id=vibe_log_id)
     if not vibe_log:
@@ -192,8 +219,8 @@ def delete_vibe_log(
     """
     Delete a vibe log.
     
-    Employee access: ✅ Own vibe logs only
-    Admin access: ✅ Any vibe log
+    Employee access: Own vibe logs only
+    Admin access: Any vibe log
     """
     vibe_log = vibe_log_controller.get(db=db, id=vibe_log_id)
     if not vibe_log:

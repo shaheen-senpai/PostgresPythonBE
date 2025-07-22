@@ -6,6 +6,7 @@ from app.models.user import User
 from app.models.vibe_log import VibeLog, MoodEnum, ComplexityEnum
 from app.models.vibe_report import VibeReport
 from app.models.burnout_score import BurnoutScore
+from app.models.sentiment_rating import SentimentRating
 
 __all__ = [
     "BaseModel",
@@ -14,5 +15,6 @@ __all__ = [
     "MoodEnum",
     "ComplexityEnum",
     "VibeReport",
-    "BurnoutScore"
+    "BurnoutScore",
+    "SentimentRating"
 ]
