@@ -44,7 +44,7 @@ class UserInDBBase(UserBase):
     
     class Config:
         """Pydantic config."""
-        orm_mode = True
+        from_attributes = True
 
 
 class User(UserInDBBase):

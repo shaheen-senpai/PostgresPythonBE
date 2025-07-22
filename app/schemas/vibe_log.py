@@ -19,8 +19,13 @@ class VibeLogBase(BaseModel):
     satisfaction: float = Field(..., ge=1.0, le=10.0)
 
 
+class VibeLogCreateEmployee(VibeLogBase):
+    """Schema for employee vibe log creation (user_id set automatically)."""
+    pass
+
+
 class VibeLogCreate(VibeLogBase):
-    """Schema for vibe log creation."""
+    """Schema for admin vibe log creation."""
     
     user_id: int
 
@@ -47,7 +52,7 @@ class VibeLogInDBBase(VibeLogBase):
     
     class Config:
         """Pydantic config."""
-        orm_mode = True
+        from_attributes = True
 
 
 class VibeLog(VibeLogInDBBase):

@@ -42,7 +42,7 @@ class VibeReportInDBBase(VibeReportBase):
     
     class Config:
         """Pydantic config."""
-        orm_mode = True
+        from_attributes = True
 
 
 class VibeReport(VibeReportInDBBase):

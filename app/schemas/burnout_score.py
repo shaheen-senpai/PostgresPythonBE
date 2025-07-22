@@ -40,7 +40,7 @@ class BurnoutScoreInDBBase(BurnoutScoreBase):
     
     class Config:
         """Pydantic config."""
-        orm_mode = True
+        from_attributes = True
 
 
 class BurnoutScore(BurnoutScoreInDBBase):
