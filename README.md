@@ -88,7 +88,8 @@ app/
 
 ## Usage
 
-Access the API documentation at `http://localhost:8000/docs` after starting the server.
+Access the API's at `http://localhost:8000/docs` after starting the server.
+or `http://127.0.0.1:8000/redoc` for more detailed documentation.
 
 ### AI Service Usage
 
