@@ -26,3 +26,9 @@ httpx==0.25.1
 
 # Utilities
 loguru==0.7.2
+
+# AI/LLM dependencies
+langchain>=0.1.0
+langchain-core>=0.1.0
+langchain-google-genai>=0.0.8
+google-generativeai>=0.4.0
