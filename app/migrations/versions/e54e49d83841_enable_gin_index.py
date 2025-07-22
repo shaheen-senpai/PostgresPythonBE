@@ -1,8 +1,8 @@
 """Enable Gin Index
 
-Revision ID: 86b2f3d76932
-Revises: 104ad2c3489a
-Create Date: 2025-07-22 14:42:16.098118
+Revision ID: e54e49d83841
+Revises: 
+Create Date: 2025-07-22 16:19:11.470363
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '86b2f3d76932'
-down_revision = '104ad2c3489a'
+revision = 'e54e49d83841'
+down_revision = None
 branch_labels = None
 depends_on = None
 
